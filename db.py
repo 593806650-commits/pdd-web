@@ -1,7 +1,8 @@
 import sqlite3
 from flask import g
+import os
 
-DB_PATH = "saas.db"
+DB_PATH = os.environ.get("DATABASE_PATH", "saas.db")
 
 def get_conn():
     if "conn" not in g:

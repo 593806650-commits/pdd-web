@@ -185,4 +185,43 @@ def dashboard():
 # 启动程序（必须放最后）
 # =========================
 if __name__ == "__main__":
+    # 本地开发模式
     app.run(host="0.0.0.0", port=5000)
+else:
+    # Render 部署模式 - 初始化数据库
+    with app.app_context():
+        from db import get_conn
+        import hashlib
+
+        conn = get_conn()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            password_hash TEXT
+        )
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            name TEXT,
+            revenue REAL,
+            profit REAL
+        )
+        """)
+
+        default_password = "123456"
+        password_hash = hashlib.sha256(default_password.encode()).hexdigest()
+
+        cursor.execute("SELECT * FROM users WHERE username='admin'")
+        if not cursor.fetchone():
+            cursor.execute("""
+            INSERT INTO users (username, password_hash)
+            VALUES (?, ?)
+            """, ('admin', password_hash))
+
+        conn.commit()

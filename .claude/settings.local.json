@@ -11,7 +11,13 @@
       "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" init)",
       "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" status)",
       "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" add .)",
-      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Initial commit with bug fixes\")"
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Initial commit with bug fixes\")",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" remote add origin https://github.com/593806650-commits/pdd-web)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" remote -v)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" branch -M main)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" push -u origin main)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" push -u origin main --force)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Auto init DB on startup, fix DB path for Render\")"
     ]
   }
 }
