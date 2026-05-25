@@ -122,8 +122,14 @@ def add():
     user = session.get("user")
 
     name = request.form["name"]
-    revenue = float(request.form["revenue"])
-    profit = float(request.form["profit"])
+    revenue_str = request.form["revenue"].strip()
+    profit_str = request.form["profit"].strip()
+
+    if not name or not revenue_str or not profit_str:
+        return "请填写所有字段 <a href='/home'>返回</a>"
+
+    revenue = float(revenue_str)
+    profit = float(profit_str)
 
     conn = get_conn()
     cursor = conn.cursor()
@@ -182,46 +188,68 @@ def dashboard():
 
 
 # =========================
+# 初始化数据库（模块级别，gunicorn worker 共享）
+# =========================
+def init_db_once():
+    from db import get_conn
+    import hashlib
+
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        password_hash TEXT
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS products (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        name TEXT,
+        revenue REAL,
+        profit REAL
+    )
+    """)
+
+    default_password = "123456"
+    password_hash = hashlib.sha256(default_password.encode()).hexdigest()
+
+    cursor.execute("SELECT * FROM users WHERE username='admin'")
+    if not cursor.fetchone():
+        cursor.execute("""
+        INSERT INTO users (username, password_hash)
+        VALUES (?, ?)
+        """, ('admin', password_hash))
+
+    conn.commit()
+    conn.close()
+
+
+# =========================
 # 启动程序（必须放最后）
 # =========================
 if __name__ == "__main__":
     # 本地开发模式
+    init_db_once()
     app.run(host="0.0.0.0", port=5000)
 else:
-    # Render 部署模式 - 初始化数据库
-    with app.app_context():
-        from db import get_conn
-        import hashlib
-
-        conn = get_conn()
-        cursor = conn.cursor()
-
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT,
-            password_hash TEXT
-        )
-        """)
-
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT,
-            name TEXT,
-            revenue REAL,
-            profit REAL
-        )
-        """)
-
-        default_password = "123456"
-        password_hash = hashlib.sha256(default_password.encode()).hexdigest()
-
-        cursor.execute("SELECT * FROM users WHERE username='admin'")
-        if not cursor.fetchone():
-            cursor.execute("""
-            INSERT INTO users (username, password_hash)
-            VALUES (?, ?)
-            """, ('admin', password_hash))
-
-        conn.commit()
+    # Render 部署模式
+    import atexit
+    _initialized = False
+    def _lazy_init():
+        global _initialized
+        if not _initialized:
+            _initialized = True
+            init_db_once()
+    atexit.register(_lazy_init)
+    # 每个请求前检查并初始化
+    @app.before_request
+    def before_request():
+        global _initialized
+        if not _initialized:
+            _initialized = True
+            init_db_once()

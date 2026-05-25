@@ -17,7 +17,10 @@
       "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" branch -M main)",
       "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" push -u origin main)",
       "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" push -u origin main --force)",
-      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Auto init DB on startup, fix DB path for Render\")"
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Auto init DB on startup, fix DB path for Render\")",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" push origin main)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" ls-remote https://github.com/593806650-commits/pdd-web main)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Fix empty string conversion to float\")"
     ]
   }
 }
