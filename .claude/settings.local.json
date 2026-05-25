@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npm config set registry https://registry.npmmirror.com)",
+      "PowerShell(npm install -g n8n)",
+      "PowerShell(Get-Command git -ErrorAction SilentlyContinue)",
+      "PowerShell(if \\(-not $?\\) { \"git not found\" })",
+      "PowerShell(winget install Git.Git --silent --accept-source-agreements --accept-package-agreements 2>&1)",
+      "PowerShell(if \\($?\\) { \"Git installed\" } else { \"winget not available, try manual install\" })",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" --version)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" init)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" status)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" add .)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Initial commit with bug fixes\")"
+    ]
+  }
+}
