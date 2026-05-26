@@ -55,6 +55,17 @@ SKU/规格：<input name="sku"><br>
 <td><a href="/delete/{{r[0]}}">删除</a></td>
 </tr>
 {% endfor %}
+<tr style="background-color:#f0f0f0;font-weight:bold;">
+<td>合计</td>
+<td></td>
+<td>{{ total_dropshipping }}</td>
+<td>{{ total_selling }}</td>
+<td>{{ total_profit }}</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 """
 
@@ -105,11 +116,18 @@ def home():
 
     data = cursor.fetchall()
 
+    total_dropshipping = sum([d[3] for d in data]) if data else 0
+    total_selling = sum([d[4] for d in data]) if data else 0
+    total_profit = total_selling - total_dropshipping
+
     return render_template_string(
         home_html,
         user=user,
         data=data,
-        ai=""
+        ai="",
+        total_dropshipping=total_dropshipping,
+        total_selling=total_selling,
+        total_profit=total_profit
     )
 
 
@@ -148,7 +166,20 @@ def add():
 
 
 # =========================
-# 重置数据库
+# AI生成标题
+# =========================
+@app.route("/ai", methods=["POST"])
+def ai():
+
+    name = request.form["name"]
+
+    result = generate_title(name)
+
+    return f"<pre>{result}</pre>"
+
+
+# =========================
+# 重置数据库（删除所有商品数据）
 # =========================
 @app.route("/reset-db")
 def reset_db():
