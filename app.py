@@ -27,7 +27,7 @@ home_html = """
 
 <p>当前用户：{{user}}</p>
 
-<a href="/dashboard">📊 数据分析</a><br><br>
+<a href="/dashboard">📊 数据分析</a> | <a href="/reset-db">🔄 重置数据库</a><br><br>
 
 <form method="post" action="/add">
 代发商品名称：<input name="supplier_product_name"><br>
@@ -148,16 +148,31 @@ def add():
 
 
 # =========================
-# AI生成标题
+# 重置数据库
 # =========================
-@app.route("/ai", methods=["POST"])
-def ai():
+@app.route("/reset-db")
+def reset_db():
+    user = session.get("user")
+    if not user:
+        return redirect("/")
 
-    name = request.form["name"]
-
-    result = generate_title(name)
-
-    return f"<pre>{result}</pre>"
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("DROP TABLE IF EXISTS products")
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS products (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        supplier_product_name TEXT,
+        dropshipping_price REAL,
+        selling_price REAL,
+        product_link TEXT,
+        sku TEXT,
+        shipping_info TEXT
+    )
+    """)
+    conn.commit()
+    return redirect("/home")
 
 
 # =========================
