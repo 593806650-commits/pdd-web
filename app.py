@@ -23,36 +23,36 @@ login_html = """
 # 首页页面
 # =========================
 home_html = """
-<h2>AI电商后台</h2>
+<h2>代发货管理系统</h2>
 
 <p>当前用户：{{user}}</p>
 
 <a href="/dashboard">📊 数据分析</a><br><br>
 
 <form method="post" action="/add">
-商品：<input name="name"><br>
-销售额：<input name="revenue"><br>
-利润：<input name="profit"><br>
+代发商品名称：<input name="supplier_product_name"><br>
+代发价：<input name="dropshipping_price"><br>
+售价：<input name="selling_price"><br>
+商品链接：<input name="product_link"><br>
+SKU/规格：<input name="sku"><br>
+发货信息：<input name="shipping_info"><br>
 <button>添加</button>
 </form>
 
-<form method="post" action="/ai">
-商品名：<input name="name">
-<button>AI生成标题</button>
-</form>
-
-<h3>AI结果</h3>
-<pre>{{ai}}</pre>
-
-<h3>数据</h3>
+<h3>代发货商品列表</h3>
 <table border="1">
-<tr><th>ID</th><th>商品</th><th>销售额</th><th>利润</th></tr>
+<tr><th>ID</th><th>商品名称</th><th>代发价</th><th>售价</th><th>利润</th><th>商品链接</th><th>SKU/规格</th><th>发货信息</th><th>操作</th></tr>
 {% for r in data %}
 <tr>
 <td>{{r[0]}}</td>
 <td>{{r[2]}}</td>
 <td>{{r[3]}}</td>
 <td>{{r[4]}}</td>
+<td>{{r[4] - r[3]}}</td>
+<td><a href="{{r[5]}}" target="_blank">链接</a></td>
+<td>{{r[6]}}</td>
+<td>{{r[7]}}</td>
+<td><a href="/delete/{{r[0]}}">删除</a></td>
 </tr>
 {% endfor %}
 </table>
@@ -121,23 +121,26 @@ def add():
 
     user = session.get("user")
 
-    name = request.form["name"]
-    revenue_str = request.form["revenue"].strip()
-    profit_str = request.form["profit"].strip()
+    supplier_product_name = request.form["supplier_product_name"].strip()
+    dropshipping_price_str = request.form["dropshipping_price"].strip()
+    selling_price_str = request.form["selling_price"].strip()
+    product_link = request.form["product_link"].strip()
+    sku = request.form["sku"].strip()
+    shipping_info = request.form["shipping_info"].strip()
 
-    if not name or not revenue_str or not profit_str:
+    if not supplier_product_name or not dropshipping_price_str or not selling_price_str:
         return "请填写所有字段 <a href='/home'>返回</a>"
 
-    revenue = float(revenue_str)
-    profit = float(profit_str)
+    dropshipping_price = float(dropshipping_price_str)
+    selling_price = float(selling_price_str)
 
     conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO products (username, name, revenue, profit)
-    VALUES (?, ?, ?, ?)
-    """, (user, name, revenue, profit))
+    INSERT INTO products (username, supplier_product_name, dropshipping_price, selling_price, product_link, sku, shipping_info)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (user, supplier_product_name, dropshipping_price, selling_price, product_link, sku, shipping_info))
 
     conn.commit()
 
@@ -158,6 +161,23 @@ def ai():
 
 
 # =========================
+# 删除商品
+# =========================
+@app.route("/delete/<int:product_id>")
+def delete(product_id):
+
+    user = session.get("user")
+
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM products WHERE id=? AND username=?", (product_id, user))
+    conn.commit()
+
+    return redirect("/home")
+
+
+# =========================
 # 数据仪表盘
 # =========================
 @app.route("/dashboard")
@@ -166,11 +186,12 @@ def dashboard():
     conn = get_conn()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT revenue, profit FROM products")
+    cursor.execute("SELECT dropshipping_price, selling_price FROM products")
     data = cursor.fetchall()
 
-    total_revenue = sum([d[0] for d in data]) if data else 0
-    total_profit = sum([d[1] for d in data]) if data else 0
+    total_dropshipping = sum([d[0] for d in data]) if data else 0
+    total_selling = sum([d[1] for d in data]) if data else 0
+    total_profit = total_selling - total_dropshipping
     count = len(data)
     avg_profit = total_profit / count if count else 0
 
@@ -178,7 +199,8 @@ def dashboard():
     <h1>📊 数据仪表盘</h1>
 
     <p>商品数量：{count}</p>
-    <p>总销售额：{total_revenue:.2f}</p>
+    <p>总代发成本：{total_dropshipping:.2f}</p>
+    <p>总销售额：{total_selling:.2f}</p>
     <p>总利润：{total_profit:.2f}</p>
     <p>平均利润：{avg_profit:.2f}</p>
 
@@ -206,12 +228,19 @@ def init_db_once():
     """)
 
     cursor.execute("""
+    DROP TABLE IF EXISTS products
+    """)
+
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT,
-        name TEXT,
-        revenue REAL,
-        profit REAL
+        supplier_product_name TEXT,
+        dropshipping_price REAL,
+        selling_price REAL,
+        product_link TEXT,
+        sku TEXT,
+        shipping_info TEXT
     )
     """)
 

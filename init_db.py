@@ -17,15 +17,22 @@ CREATE TABLE IF NOT EXISTS users (
 """)
 
 # =====================
-# 商品表
+# 代发货商品表
 # =====================
+cursor.execute("""
+DROP TABLE IF EXISTS products
+""")
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT,
-    name TEXT,
-    revenue REAL,
-    profit REAL
+    supplier_product_name TEXT,
+    dropshipping_price REAL,
+    selling_price REAL,
+    product_link TEXT,
+    sku TEXT,
+    shipping_info TEXT
 )
 """)
 
