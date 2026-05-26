@@ -263,7 +263,8 @@ def init_db_once():
 # =========================
 if __name__ == "__main__":
     # 本地开发模式
-    init_db_once()
+    with app.app_context():
+        init_db_once()
     app.run(host="0.0.0.0", port=5000)
 else:
     # Render 部署模式

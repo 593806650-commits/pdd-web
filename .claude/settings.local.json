@@ -20,7 +20,23 @@
       "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Auto init DB on startup, fix DB path for Render\")",
       "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" push origin main)",
       "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" ls-remote https://github.com/593806650-commits/pdd-web main)",
-      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Fix empty string conversion to float\")"
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" -C \"C:\\\\Users\\\\c\\\\Desktop\\\\pdd_web\" commit -m \"Fix empty string conversion to float\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Bash(git rebase *)",
+      "Bash(python init_db.py)",
+      "Bash(python app.py)",
+      "Bash(curl -s http://localhost:5000)",
+      "Bash(netstat -ano)",
+      "Bash(curl -s -X POST http://localhost:5000/add -d \"supplier_product_name=test&dropshipping_price=10&selling_price=20&product_link=http://test.com&sku=test-sku&shipping_info=测试发货\")",
+      "Bash(curl -s -c cookies.txt -X POST http://localhost:5000/ -d \"username=admin&password=123456\")",
+      "Bash(curl -s -c cookies.txt -b cookies.txt -X POST http://localhost:5000/add -d \"supplier_product_name=test&dropshipping_price=10&selling_price=20&product_link=http://test.com&sku=test-sku&shipping_info=测试发货\")",
+      "Bash(curl -s -c cookies.txt -b cookies.txt -X POST http://localhost:5000/add --data-urlencode \"supplier_product_name=test\" --data-urlencode \"dropshipping_price=10\" --data-urlencode \"selling_price=20\" --data-urlencode \"product_link=http://test.com\" --data-urlencode \"sku=test-sku\" --data-urlencode \"shipping_info=测试发货\")",
+      "Bash(curl -s -c cookies.txt -b cookies.txt http://localhost:5000/home)",
+      "Bash(git commit *)"
     ]
   }
 }
